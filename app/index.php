@@ -11,11 +11,10 @@
     ];
 
     
-    $result = api_request('status', 'POST', $variables);
+    $result = api_request('status', 'GET');
 
-    echo '<pre>';
-    print_r ($result);
-    echo '</pre>';
+    echo '<pre>'; print_r ($result); echo '</pre>';
+
     
     
     
