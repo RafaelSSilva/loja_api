@@ -16,11 +16,9 @@ function api_request($endpoint, $method = 'GET', $variables = []) {
 
     }
 
-    
     $list_params[CURLOPT_CUSTOMREQUEST]  = $method;
     $list_params[CURLOPT_URL]            = $url;
     $list_params[CURLOPT_RETURNTRANSFER] = TRUE;
-
 
     curl_setopt_array($client, $list_params);
     $response = curl_exec($client);

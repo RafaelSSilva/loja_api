@@ -1,37 +1,52 @@
 <?php
-//http://localhost/loja_api/api/index.php
+/**
+ * http://localhost/loja_api/api/index.php
+ * http://localhost/loja_api/api/index.php?endpoint=status
+ */
+
 
 require_once dirname(__FILE__).'/inc/config.php';
-require_once dirname(__FILE__).'/inc/api_class.php';
+require_once dirname(__FILE__).'/inc/api_response.php';
+require_once dirname(__FILE__).'/inc/api_logic.php';
+require_once dirname(__FILE__).'/inc/database.php';
 
-$api = new api_class;
+$api_response = new api_response;
 
-
-if (!$api->check_method($_SERVER['REQUEST_METHOD'])) {
-    $api->api_request_error('Aconteceu um erro na API!!!');
-    
+if (!$api_response->check_method($_SERVER['REQUEST_METHOD'])) {
+    $api_response->api_request_error('Invalid request method.');
 }
 
-$api->send_api_status();
+$api_response->set_method($_SERVER['REQUEST_METHOD']);
+$params = NULL;
+if ($api_response->get_method() == 'GET') {
+    $api_response->set_endpoint(isset($_GET['endpoint']) ? $_GET['endpoint'] : '');
+    $params = $_GET;
+} elseif ($api_response->get_method() == 'POST') {
+    $api_response->set_endpoint(isset($_POST['endpoint']) ? $_POST['endpoint'] : '');
+    $params = $_POST;
+}
 
 
-//var_dump(__FILE__);
-//var_dump(dirname(__FILE__));
+//Rotas
+$api_logic = new api_logic($api_response->get_endpoint(), $params);
 
-  
-//resposta temporária
-//header('Content-Type:application/json');
+if (!$api_logic->endpoint_exists()) {
+    $api_response->api_request_error('Inexistent endpoint: ' . $api_response->get_endpoint());
+}
 
-//$data['status'] = 'SUCCESS';
-//$data['method'] = $_SERVER['REQUEST_METHOD'];
 
-//if ($data['method'] == 'GET') {
-  //  $data['data'] = $_GET;
-//} else if ($data['method'] == 'POST') {
-  //  $data['data'] = $_POST;
-//}
+$result = $api_logic->{$api_response->get_endpoint()}();
+$api_response->add_do_data('data', $result);
 
-//apresenta as variáveis que vieram no pedido (get ou post)
-//echo json_encode($data);
+$api_response->send_response();
+
+//$api_response->send_api_status();
+
+
+
+
+
+
+
 
    

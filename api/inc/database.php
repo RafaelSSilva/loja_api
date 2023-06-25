@@ -7,13 +7,12 @@ class database
         $results = null;
 
         //connection
-        $connection = new PDO('mysql:host='.DB_SERVER.';dbname='.DB_NAME.';charset='.DB_CHARSET, DB_USERNAME, DB_PASSWORD, array(PDO::ATTR_PERSISTENT => true));
-
+        $connection = new PDO('mysql:host='.DB_SERVER.';dbname='.DB_NAME.';charset='.DB_CHARSET, DB_USERNAME, DB_PASSWORD,array(PDO::ATTR_PERSISTENT => true));
         if ($debug) {
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         }
-
+        
         //execution
         try {
             if ($parameters != null) {

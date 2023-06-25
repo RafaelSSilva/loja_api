@@ -1,5 +1,5 @@
 <?php 
-class api_class {
+class api_response {
     private array $data;
     private array $available_methods; 
 
@@ -20,9 +20,29 @@ class api_class {
         $this->data['method'] = $method;
     }
 
-    public function api_request_error ($message = '') {
-        $this->data['status'] = 'ERROR';
-        $this->data['error_message'] = $message;
+    public function get_method():string {
+        return $this->data['method'];
+    }
+
+    public function set_endpoint(string $endpoint):void {
+        $this->data['endpoint'] = $endpoint;
+    }
+
+    public function get_endpoint():string {
+        return $this->data['endpoint'];
+    }
+
+    public function add_do_data($key, $value) {
+        $this->data[$key] = $value;
+    }
+
+    public function api_request_error ($message = '') {        
+        $this->data['data'] = [
+            'status'  => 'ERROR',
+            'message' => $message,
+            'results' => NULL
+        ];
+
         $this->send_response();
     }
 
