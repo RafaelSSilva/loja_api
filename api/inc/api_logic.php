@@ -4,7 +4,7 @@ class api_logic {
     private string $endpoint;
     private ?array $params;
 
-    public function __construct ($endpoint, $params = NULL) {
+    public function __construct (string $endpoint, ?array $params = NULL) {
         $this->endpoint = $endpoint;
         $this->params   = $params;
     }
@@ -24,18 +24,66 @@ class api_logic {
         
     }
 
-    public function get_all_clients() {
-        $db = new database;
-        $results = $db->EXE_QUERY('SELECT * FROM clientes');
-        
+    public function error_response ($message) {
         return [
-            'status'  => 'SUCCESS',
-            'message' => '',
-            'results' => $results
+            'status'   => 'ERROR',
+            'message'  => $message,
+            'results'  => []
         ];
-        
     }
 
+    public function get_all_clients () {
+        $db = new database;
+        $results = $db->EXE_QUERY("SELECT * FROM clientes");
+
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => '',
+            'results'  => $results
+        ];
+    }
+
+    public function get_all_active_clients () {
+        $db = new database;
+        $results = $db->EXE_QUERY("SELECT * FROM clientes WHERE deleted_at IS NULL");
+
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => '',
+            'results'  => $results
+        ];
+    }
+
+    public function get_all_unactive_clients () {
+        $db = new database;
+        $results = $db->EXE_QUERY("SELECT * FROM clientes WHERE deleted_at IS NOT NULL");
+
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => '',
+            'results'  => $results
+        ];
+    }
+
+    public function get_client () {
+        $sql = "SELECT * FROM clientes WHERE 1 ";
+
+        if (key_exists('id', $this->params) && filter_var($this->params['id'], FILTER_VALIDATE_INT))
+            $sql .= " AND id_cliente = ". intval($this->params['id']);
+        else
+            return $this->error_response('ID client not specified.');
+
+        $db = new database;
+        $results = $db->EXE_QUERY($sql);
+
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => '',
+            'results'  => $results
+        ];
+    }
+
+    
     public function get_all_products() {
         $db = new database;
         $results = $db->EXE_QUERY('SELECT * FROM produtos');
@@ -46,5 +94,6 @@ class api_logic {
             'results' => $results
         ];
     }
+
 
 }

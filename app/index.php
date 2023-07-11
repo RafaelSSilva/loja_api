@@ -25,8 +25,8 @@
     */
 
     
-    print '<h3>Clientes: </h3>';
-    $result = api_request('get_all_clients', 'GET', $variables);
+    print '<h3>Todos Clientes: </h3>';
+    $result = api_request('get_all_clients', 'GET');
     foreach($result['data']['results'] as $client) {
         print "Nome: {$client['nome']} <br>";
         print "E-mail: {$client['email']} <br>";
@@ -34,14 +34,48 @@
         print '<br>';
     } 
     print '<hr>';
-   
+
+    print '<h3>Clientes Ativos: </h3>';
+    $result = api_request('get_all_active_clients', 'GET');
+    foreach($result['data']['results'] as $client) {
+        print "Nome: {$client['nome']} <br>";
+        print "E-mail: {$client['email']} <br>";
+        print "Telefone: {$client['telefone']} <br>";
+        print '<br>';
+    } 
+    print '<hr>';
+
+    print '<h3>Clientes Inativos: </h3>';
+    $result = api_request('get_all_unactive_clients', 'GET');
+    foreach($result['data']['results'] as $client) {
+        print "Nome: {$client['nome']} <br>";
+        print "E-mail: {$client['email']} <br>";
+        print "Telefone: {$client['telefone']} <br>";
+        print '<br>';
+    } 
+    print '<hr>';
+
+    print '<h3>Cliente: </h3>';
+    $result = api_request('get_client', 'GET', ['id' => 1]);
+    foreach($result['data']['results'] as $client) {
+        print "Nome: {$client['nome']} <br>";
+        print "E-mail: {$client['email']} <br>";
+        print "Telefone: {$client['telefone']} <br>";
+        print '<br>';
+    } 
+    print '<hr>';
+    
+
+
+
+    /*
     print '<h3>Produtos: </h3>';
     $result = api_request('get_all_products', 'GET', $variables);
     foreach($result['data']['results'] as $product) {
         print "Nome: {$product['nome']} <br>";
         print "Quantidade: {$product['quantidade']} <br>";
         print '<br>';
-    } 
+    } */
     
    
     
