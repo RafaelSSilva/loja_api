@@ -32,6 +32,10 @@ class api_logic {
         ];
     }
 
+    // ------------------------------------------------------------------------------------------------------------------
+    // CLIENTES
+    // ------------------------------------------------------------------------------------------------------------------
+
     public function get_all_clients () {
         $db = new database;
         $results = $db->EXE_QUERY("SELECT * FROM clientes");
@@ -84,6 +88,10 @@ class api_logic {
     }
 
     
+    // ------------------------------------------------------------------------------------------------------------------
+    // PRODUTOS
+    // ------------------------------------------------------------------------------------------------------------------
+
     public function get_all_products() {
         $db = new database;
         $results = $db->EXE_QUERY('SELECT * FROM produtos');
@@ -95,5 +103,55 @@ class api_logic {
         ];
     }
 
+    public function get_all_active_products () {
+        $db = new database;
+        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE deleted_at IS NULL");
+      
+        return [
+          'status'   => 'SUCCESS',
+          'message'  => '',
+          'results'  => $results
+        ];
+      }
+      
+      public function get_all_unactive_products () {
+        $db = new database;
+        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE deleted_at IS NOT NULL");
+      
+        return [
+          'status'   => 'SUCCESS',
+          'message'  => '',
+          'results'  => $results
+        ];
+      }
+      
+      public function get_all_products_without_stock () {
+        $db = new database;
+        $results = $db->EXE_QUERY("SELECT * FROM produtos WHERE quantidade <= 0 AND deleted_at IS NULL");
+      
+        return [
+          'status'   => 'SUCCESS',
+          'message'  => '',
+          'results'  => $results
+        ];
+      }
+      
+      public function get_product () {
+        $sql = "SELECT * FROM produtos WHERE 1 ";
+      
+        if (key_exists('id', $this->params) && filter_var($this->params['id'], FILTER_VALIDATE_INT))
+          $sql .= " AND id_produto = ". intval($this->params['id']);
+        else
+         return $this->error_response('ID product not specified.');
+      
+        $db = new database;
+        $results = $db->EXE_QUERY($sql);
+      
+        return [
+          'status'   => 'SUCCESS',
+          'message'  => '',
+          'results'  => $results
+        ];
+      }
 
 }

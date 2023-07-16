@@ -37,10 +37,8 @@ if (!$api_logic->endpoint_exists()) {
 
 $result = $api_logic->{$api_response->get_endpoint()}();
 $api_response->add_do_data('data', $result);
-
 $api_response->send_response();
 
-//$api_response->send_api_status();
 
 
 
