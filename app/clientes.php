@@ -1,16 +1,18 @@
 <?php
-    /**
-     * http://localhost/loja_api/app/
-     * http://localhost/loja_api/app/index.php
-     */
-         
-    
+    // http://localhost/loja_api/app/clientes.php
+        
     require_once 'inc/config.php';
     require_once 'inc/api_functions.php';
+    require_once 'inc/functions.php';
 
+    $clientes = [];
     
-    
-    
+    $result = api_request('get_all_clients', 'GET');
+    if ($result['data']['status'] === 'SUCCESS') 
+        $clientes = (array) $result['data']['results'];     
+    else 
+        die("ERROR: {$result['data']['message']}");
+
 ?>    
 
 <!DOCTYPE html>
@@ -23,6 +25,42 @@
 </head>
 <body>
     <?php include 'inc/nav.php';?>
+
+    <section class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Clientes</h1>
+                <hr>
+                    
+                <?php
+                    if (count($clientes) == 0): ?>
+                        <p class="text-center">Não existem clientes registrados.</p>
+                    <?php else : ?> 
+                        <table class="table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Telefone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($clientes as $cliente): ?>
+                                <tr>
+                                    <td><?=$cliente['nome']?></td>
+                                    <td><?=$cliente['email']?></td>
+                                    <td><?=$cliente['telefone']?></td>
+                                </tr>
+                                
+                                <?php endforeach;?>
+                                
+                            </tbody>
+                        </table>
+                    <?php endif; ?>                        
+            </div>
+        </div>
+    </section>
+
     <script src="assets/bootstrap/bootstrap.min.js"></script>
 </body>
 </html>
@@ -43,7 +81,19 @@
     print '<pre>'; print_r ($result); print '</pre>';
     print '<hr>';
 
-    
+    print '<h3>Todos Clientes: </h3>';
+    $result = api_request('get_all_clients', 'GET');
+    if ($result['data']['status'] === 'SUCCESS') {
+        foreach($result['data']['results'] as $client) {
+            print "Nome: {$client['nome']} <br>";
+            print "E-mail: {$client['email']} <br>";
+            print "Telefone: {$client['telefone']} <br>";
+            print '<br>';
+        }
+    } else {
+        print "ERROR: {$result['data']['message']}";
+    }
+    print '<hr>';
 
     print '<h3>Clientes Ativos: </h3>';
     $result = api_request('get_all_active_clients', 'GET');

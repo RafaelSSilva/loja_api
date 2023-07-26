@@ -3,14 +3,9 @@
      * http://localhost/loja_api/app/
      * http://localhost/loja_api/app/index.php
      */
-         
-    
+        
     require_once 'inc/config.php';
     require_once 'inc/api_functions.php';
-
-    
-    
-    
 ?>    
 
 <!DOCTYPE html>
@@ -43,7 +38,19 @@
     print '<pre>'; print_r ($result); print '</pre>';
     print '<hr>';
 
-    
+    print '<h3>Todos Clientes: </h3>';
+    $result = api_request('get_all_clients', 'GET');
+    if ($result['data']['status'] === 'SUCCESS') {
+        foreach($result['data']['results'] as $client) {
+            print "Nome: {$client['nome']} <br>";
+            print "E-mail: {$client['email']} <br>";
+            print "Telefone: {$client['telefone']} <br>";
+            print '<br>';
+        }
+    } else {
+        print "ERROR: {$result['data']['message']}";
+    }
+    print '<hr>';
 
     print '<h3>Clientes Ativos: </h3>';
     $result = api_request('get_all_active_clients', 'GET');
