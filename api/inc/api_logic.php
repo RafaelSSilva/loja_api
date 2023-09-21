@@ -87,6 +87,61 @@ class api_logic {
         ];
     }
 
+    public function create_new_client() {
+        if (isset($this->params['nome'], $this->params['email'], $this->params['telefone']) === false) {
+            return $this->error_response('Insufficient client data.');
+        }
+        
+        if (empty($this->params['nome']) || strlen(trim($this->params['nome'])) === 0) {
+            return $this->error_response('Invalid name.');
+        }
+
+        if (empty($this->params['email']) || strlen(trim($this->params['email'])) === 0) {
+            return $this->error_response('Invalid email.');
+        }
+
+        if (empty($this->params['telefone']) || strlen(trim($this->params['telefone'])) === 0) {
+            return $this->error_response('Invalid phone.');
+        }
+
+
+        $db = new database;
+
+        $params = [ 'email' => $this->params['email']];
+        $results = $db->EXE_QUERY("SELECT id_cliente FROM clientes WHERE email = :email", $params);
+
+        if (count($results) != 0) {
+            return $this->error_response('There is already another client with the same email.');            
+        }
+        
+
+        $params = [
+            ':nome'     => $this->params['nome'],
+            ':email'    => $this->params['email'],
+            ':telefone' => $this->params['telefone']
+        ];
+
+        
+        $db->EXE_NON_QUERY("
+                INSERT INTO clientes VALUES (
+                        0, 
+                        :nome, 
+                        :email, 
+                        :telefone, 
+                        NOW(), 
+                        NOW(),
+                        NULL
+                    )
+                ", $params);
+
+        
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => 'New client add with success ',
+            'results'  => []
+        ];
+    }
+
     
     // ------------------------------------------------------------------------------------------------------------------
     // PRODUTOS

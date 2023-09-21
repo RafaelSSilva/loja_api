@@ -3,14 +3,9 @@
      * http://localhost/loja_api/app/
      * http://localhost/loja_api/app/index.php
      */
-         
-    
+             
     require_once 'inc/config.php';
     require_once 'inc/api_functions.php';
-
-    
-    
-    
 ?>    
 
 <!DOCTYPE html>

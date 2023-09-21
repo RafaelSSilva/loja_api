@@ -5,7 +5,7 @@ class database
     //executes a query the the database (SELECT)
     public function EXE_QUERY($query, $parameters = null, $debug = true, $close_connection = true) {
         $results = null;
-
+    
         //connection
         $connection = new PDO('mysql:host='.DB_SERVER.';dbname='.DB_NAME.';charset='.DB_CHARSET, DB_USERNAME, DB_PASSWORD,array(PDO::ATTR_PERSISTENT => true));
         if ($debug) {
@@ -25,6 +25,7 @@ class database
                 $results = $gestor->fetchAll(PDO::FETCH_ASSOC);
             }
         } catch (PDOException $e) {
+            print $e->getMessage();
             return false;
         }
 
@@ -35,6 +36,7 @@ class database
 
         //returns results
         return $results;
+        
     }
     
     //executes a query to the database (INSERT, UPDATE, DELETE)

@@ -6,6 +6,15 @@
         
     require_once 'inc/config.php';
     require_once 'inc/api_functions.php';
+
+    $produtos = [];
+    
+    $result = api_request('get_all_products', 'GET');
+    if ($result['data']['status'] === 'SUCCESS') 
+        $produtos = (array) $result['data']['results'];     
+    else 
+        die("ERROR: {$result['data']['message']}");
+
 ?>    
 
 <!DOCTYPE html>
@@ -18,177 +27,47 @@
 </head>
 <body>
     <?php include 'inc/nav.php';?>
+    
+    <section class="container">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h1>Produtos</h1>
+                    </div>
+                            
+                    <div class="col text-end align-self-center">
+                        <a href="produto_novo.php" class="btn btn-primary btn-sm">Adicionar Produto...</a>
+                    </div>
+                </div>  
+            <hr>                
+        <?php
+        if (count($produtos) == 0): ?>
+            <p class="text-center">Não existem produtos registrados.</p>
+        <?php else : ?> 
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th width="50%" >Produto</th>
+                        <th width="50%" class="text-end">Quantidade</th>
+                    </tr>
+                </thead>
+                              
+                <tbody>
+                    <?php foreach($produtos as $produto): ?>
+                    <tr>
+                        <td><?=$produto['nome']?></td>
+                        <td class="text-end"><?=$produto['quantidade']?></td>
+                    </tr>                                  
+                    <?php endforeach;?>
+                </tbody>
+            </table>
+            <p class="text-end"><strong>Total: <?=count($produtos)?></strong></p>
+        <?php endif; ?>                        
+        </div>
+    </div>                 
+    </section>  
     <script src="assets/bootstrap/bootstrap.min.js"></script>
 </body>
 </html>
 
-  
-<?php  
-  /*
-    $variables = [
-        'nome'      => 'Rafael',
-        'apelido'   => 'Rafa',
-        'sobrenome' => 'Santos Da Silva',
-        'idade'     => 31
-    ];
-    
-
-    print '<h3>Status da API:</h3>';
-    $result = api_request('status', 'GET');
-    print '<pre>'; print_r ($result); print '</pre>';
-    print '<hr>';
-
-    print '<h3>Todos Clientes: </h3>';
-    $result = api_request('get_all_clients', 'GET');
-    if ($result['data']['status'] === 'SUCCESS') {
-        foreach($result['data']['results'] as $client) {
-            print "Nome: {$client['nome']} <br>";
-            print "E-mail: {$client['email']} <br>";
-            print "Telefone: {$client['telefone']} <br>";
-            print '<br>';
-        }
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-
-    print '<h3>Clientes Ativos: </h3>';
-    $result = api_request('get_all_active_clients', 'GET');
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0) {
-            foreach($result['data']['results'] as $client) {
-                print "Nome: {$client['nome']} <br>";
-                print "E-mail: {$client['email']} <br>";
-                print "Telefone: {$client['telefone']} <br>";
-                print '<br>';
-            }
-        } else {
-            print 'Nenhum cliente ativo foi encontrado.';            
-        }
-        
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-
-    print '<h3>Clientes Inativos: </h3>';
-    $result = api_request('get_all_unactive_clients', 'GET');
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0)
-            foreach($result['data']['results'] as $client) {
-                print "Nome: {$client['nome']} <br>";
-                print "E-mail: {$client['email']} <br>";
-                print "Telefone: {$client['telefone']} <br>";
-                print '<br>';
-            }
-        else {
-            print 'Nenhum cliente inativo foi encontrado.';
-        }    
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-
-    print '<h3>Cliente: </h3>';
-    $result = api_request('get_client', 'GET', ['id' => 1]);
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0) {
-            foreach($result['data']['results'] as $client) {
-                print "Nome: {$client['nome']} <br>";
-                print "E-mail: {$client['email']} <br>";
-                print "Telefone: {$client['telefone']} <br>";
-                print '<br>';
-            }
-        } else {
-            print 'Cliente não encontrado.';
-        }
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-    
-    print '<h3>Produtos: </h3>';
-    $result = api_request('get_all_products', 'GET');
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0) {
-            foreach($result['data']['results'] as $product) {
-                print "Nome: {$product['nome']} <br>";
-                print "Quantidade: {$product['quantidade']} <br>";
-                print '<br>';
-            }
-        } else {
-            print 'Nenhum produtos foi encontrado.';
-        }
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-
-    print '<h3>Produtos Ativos: </h3>';
-    $result = api_request('get_all_active_products', 'GET');
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0) {
-            foreach($result['data']['results'] as $product) {
-                print "Nome: {$product['nome']} <br>";
-                print "Quantidade: {$product['quantidade']} <br>";
-                print '<br>';
-            }
-        } else {
-            print 'Nenhum produto ativo foi encontrado.';
-        }
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-
-    print '<h3>Produtos Inativos: </h3>';
-    $result = api_request('get_all_unactive_products', 'GET');
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0) {
-            foreach($result['data']['results'] as $product) {
-                print "Nome: {$product['nome']} <br>";
-                print "Quantidade: {$product['quantidade']} <br>";
-                print '<br>';
-            }
-        } else {
-            print 'Nenhum produto inativo foi encontrado.';
-        }
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }    
-    print '<hr>';
-
-    print '<h3>Produtos sem estoque: </h3>';
-    $result = api_request('get_all_products_without_stock', 'GET');
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0) {
-            foreach($result['data']['results'] as $product) {
-                print "Nome: {$product['nome']} <br>";
-                print "Quantidade: {$product['quantidade']} <br>";
-                print '<br>';
-            }
-        } else {
-            print 'Nenhum produto sem estoque foi encontrado.';
-        } 
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-    
-    print '<h3>Produto: </h3>';
-    $result = api_request('get_product', 'GET', ['id' => 1]);
-    if ($result['data']['status'] === 'SUCCESS') {
-        if (is_array($result['data']['results']) && count($result['data']['results']) > 0) {
-            foreach($result['data']['results'] as $product) {
-                print "Nome: {$product['nome']} <br>";
-                print "Quantidade: {$product['quantidade']} <br>";
-                print '<br>';
-            }
-        } else {
-            print 'Nenhum produto foi encontrado.';
-        } 
-    } else {
-        print "ERROR: {$result['data']['message']}";
-    }
-    print '<hr>';
-    */
