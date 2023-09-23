@@ -209,4 +209,45 @@ class api_logic {
         ];
       }
 
+
+    public function create_new_product() {
+        if (!isset($this->params['nome'], $this->params['qtd'])) {
+            return $this->error_response('Insufficient product data.');
+        }
+        
+        if (empty($this->params['nome']) || strlen(trim($this->params['nome'])) === 0) {
+            return $this->error_response('Invalid name.');
+        }
+
+        if (filter_var($this->params['qtd'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 0))) === false) {
+            return $this->error_response('Qty is less than zero.');
+        }
+        
+        $db = new database;
+
+        $params = [
+            ':nome' => $this->params['nome'],
+            ':qtd'  => $this->params['qtd'],
+        ];
+        
+        $db->EXE_NON_QUERY("
+                INSERT INTO produtos VALUES (
+                        0, 
+                        :nome, 
+                        :qtd, 
+                        NOW(), 
+                        NOW(),
+                        NULL
+                    )
+                ", $params);
+
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => 'New product add with success ',
+            'results'  => []
+        ];
+        
+    }
+
+
 }

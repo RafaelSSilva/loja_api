@@ -63,7 +63,7 @@
 
                     <div class="mb-3 text-center">
                         <a href="clientes.php" class="btn btn-secondary btn-sm">Cancelar</a>
-                        <input id="" name="" type="submit" value="Salvar" class="btn btn-primary btn-sm">
+                        <input id="btn_add" name="btn_add" type="submit" value="Salvar" class="btn btn-primary btn-sm">
                     </div>
                         
                     <?php if (!empty($success_message)): ?>
