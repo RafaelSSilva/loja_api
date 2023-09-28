@@ -142,6 +142,30 @@ class api_logic {
         ];
     }
 
+    public function delete_client () {
+        if (!key_exists('id', $this->params) || filter_var($this->params['id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) === false)
+            return $this->error_response('ID client not specified.');
+            
+        $db = new database;
+        
+        $params = ['id' => $this->params['id']];
+
+        
+        //Hard delete
+        $db->EXE_NON_QUERY("DELETE FROM clientes WHERE id_cliente = :id", $params);
+
+        //soft delete
+        //$db->EXE_NON_QUERY("UPDATE clientes SET updated_at = NOW(), deleted_at = NOW() WHERE id_cliente = :id", $params);
+
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => 'Client deleted with success ',
+            'results'  => []
+        ];
+    }
+
+
+
     
     // ------------------------------------------------------------------------------------------------------------------
     // PRODUTOS

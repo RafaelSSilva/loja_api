@@ -41,7 +41,7 @@
 
                     <div class="mb-3">
                         <label>Quantidade:</label>
-                        <input id="quantidade" name="quantidade" type="number" class="form-control" value="" min="1">
+                        <input id="quantidade" name="quantidade" type="number" class="form-control" value="" min="0">
                     </div>
 
                     <div class="mb-3 text-center">

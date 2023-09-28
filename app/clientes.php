@@ -7,11 +7,13 @@
 
     $clientes = [];
     
-    $result = api_request('get_all_clients', 'GET');
+    $result = api_request('get_all_active_clients', 'GET');
     if ($result['data']['status'] === 'SUCCESS') 
         $clientes = (array) $result['data']['results'];     
     else 
         die("ERROR: {$result['data']['message']}");
+
+
 
 ?>    
 
@@ -31,7 +33,7 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <h1>Produtos</h1>
+                        <h1>Clientes</h1>
                     </div>
                     
                     <div class="col text-end align-self-center">
@@ -50,6 +52,7 @@
                                     <th>Nome</th>
                                     <th>E-mail</th>
                                     <th>Telefone</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,6 +61,7 @@
                                     <td><?=$cliente['nome']?></td>
                                     <td><?=$cliente['email']?></td>
                                     <td><?=$cliente['telefone']?></td>
+                                    <td><a href="clientes_delete.php?id=<?=$cliente['id_cliente']?>">Deletar</a></td>
                                 </tr>
                                 
                                 <?php endforeach;?>

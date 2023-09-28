@@ -7,7 +7,7 @@ CREATE TABLE clientes(
 	telefone VARCHAR(50) DEFAULT NULL,
 	created_at DATETIME DEFAULT NULL,
 	updated_at DATETIME DEFAULT NULL,
-	delated_at DATETIME DEFAULT NULL,
+	deleted_at DATETIME DEFAULT NULL,
 	PRIMARY KEY(id_cliente)
 );
 
@@ -17,7 +17,7 @@ CREATE TABLE produtos(
 	quantidade INT DEFAULT 0,
 	created_at DATETIME DEFAULT NULL,
 	updated_at DATETIME DEFAULT NULL,
-	delated_at DATETIME DEFAULT NULL,
+	deleted_at DATETIME DEFAULT NULL,
 	PRIMARY KEY(id_produto)
 );
 
