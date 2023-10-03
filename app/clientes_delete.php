@@ -19,11 +19,10 @@
 
     // Verifica se é para eleminar o cliente.
     if (isset($_GET['confirm']) && $_GET['confirm'] == 'true') {
-        $result = api_request('delete_client', 'POST', ['id' => $_GET['id']]);
-        if (!isset($_GET['id'])) {
-            header('Location: clientes.php');
-            exit;
-        }
+        api_request('delete_client', 'POST', ['id' => $_GET['id']]);
+        header('Location: clientes.php');
+        exit;
+        
     }
 
     //Busca os dados do cliente à API

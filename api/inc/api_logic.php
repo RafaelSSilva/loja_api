@@ -108,7 +108,12 @@ class api_logic {
         $db = new database;
 
         $params = [ 'email' => $this->params['email']];
-        $results = $db->EXE_QUERY("SELECT id_cliente FROM clientes WHERE email = :email", $params);
+        $results = $db->EXE_QUERY("
+            SELECT id_cliente FROM clientes 
+            WHERE 1 
+            AND email = :email
+            AND deleted_at IS NULL
+        ", $params);
 
         if (count($results) != 0) {
             return $this->error_response('There is already another client with the same email.');            
@@ -152,10 +157,10 @@ class api_logic {
 
         
         //Hard delete
-        $db->EXE_NON_QUERY("DELETE FROM clientes WHERE id_cliente = :id", $params);
+        //$db->EXE_NON_QUERY("DELETE FROM clientes WHERE id_cliente = :id", $params);
 
-        //soft delete
-        //$db->EXE_NON_QUERY("UPDATE clientes SET updated_at = NOW(), deleted_at = NOW() WHERE id_cliente = :id", $params);
+        //Soft delete
+        $db->EXE_NON_QUERY("UPDATE clientes SET deleted_at = NOW() WHERE id_cliente = :id", $params);
 
         return [
             'status'   => 'SUCCESS',
