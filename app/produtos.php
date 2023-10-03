@@ -6,10 +6,11 @@
         
     require_once 'inc/config.php';
     require_once 'inc/api_functions.php';
+    require_once 'inc/functions.php';
 
     $produtos = [];
     
-    $result = api_request('get_all_products', 'GET');
+    $result = api_request('get_all_active_products', 'GET');
     if ($result['data']['status'] === 'SUCCESS') 
         $produtos = (array) $result['data']['results'];     
     else 
@@ -48,8 +49,9 @@
             <table class="table">
                 <thead class="table-dark">
                     <tr>
-                        <th width="50%" >Produto</th>
-                        <th width="50%" class="text-end">Quantidade</th>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th class="text-end"></th>
                     </tr>
                 </thead>
                               
@@ -57,7 +59,8 @@
                     <?php foreach($produtos as $produto): ?>
                     <tr>
                         <td><?=$produto['nome']?></td>
-                        <td class="text-end"><?=$produto['quantidade']?></td>
+                        <td><?=$produto['quantidade']?></td>
+                        <td class="text-end"><a href="produtos_delete.php?id=<?=$produto['id_produto']?>">Deletar</a></td>
                     </tr>                                  
                     <?php endforeach;?>
                 </tbody>
