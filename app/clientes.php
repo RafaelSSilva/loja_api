@@ -61,7 +61,10 @@
                                     <td><?=$cliente['nome']?></td>
                                     <td><?=$cliente['email']?></td>
                                     <td><?=$cliente['telefone']?></td>
-                                    <td><a href="clientes_delete.php?id=<?=$cliente['id_cliente']?>">Deletar</a></td>
+                                    <td>
+                                        <a href="cliente_edit.php?id=<?=$cliente['id_cliente']?>">&#9998;</a>
+                                        <a href="clientes_delete.php?id=<?=$cliente['id_cliente']?>">&#128465;</a>
+                                    </td>
                                 </tr>
                                 
                                 <?php endforeach;?>

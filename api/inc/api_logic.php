@@ -147,6 +147,70 @@ class api_logic {
         ];
     }
 
+
+    public function edit_client() {
+        if (!key_exists('id', $this->params) || filter_var($this->params['id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) === false)
+            return $this->error_response('ID client not specified.');
+        
+
+        if (isset($this->params['nome'], $this->params['email'], $this->params['telefone']) === false) {
+            return $this->error_response('Insufficient client data.');
+        }
+        
+        if (empty($this->params['nome']) || strlen(trim($this->params['nome'])) === 0) {
+            return $this->error_response('Invalid name.');
+        }
+
+        if (empty($this->params['email']) || strlen(trim($this->params['email'])) === 0) {
+            return $this->error_response('Invalid email.');
+        }
+
+        if (empty($this->params['telefone']) || strlen(trim($this->params['telefone'])) === 0) {
+            return $this->error_response('Invalid phone.');
+        }
+
+
+        $db = new database;
+
+        $params = [ 'id_cliente' => $this->params['id'], 'email' => $this->params['email']];
+        
+        $results = $db->EXE_QUERY("
+            SELECT * FROM clientes 
+            WHERE 1 
+            AND id_cliente <> :id_cliente
+            AND email = :email
+            AND deleted_at IS NULL
+        ", $params);
+
+        if (count($results) != 0) {
+            return $this->error_response('There is already another client with the same email.');            
+        }
+        
+        $params = [
+            'id_cliente' => $this->params['id'],
+            ':nome'      => $this->params['nome'],
+            ':email'     => $this->params['email'],
+            ':telefone'  => $this->params['telefone']
+        ];
+
+        //$db->EXE_NON_QUERY("UPDATE clientes SET deleted_at = NOW() WHERE id_cliente = :id", $params);
+
+        
+        $db->EXE_NON_QUERY("
+                UPDATE clientes SET 
+                    nome = :nome, 
+                    email = :email, 
+                    telefone = :telefone
+                WHERE id_cliente = :id_cliente    
+                ", $params);
+        
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => 'Client edit with success ',
+            'results'  => []
+        ];
+    }
+
     public function delete_client () {
         if (!key_exists('id', $this->params) || filter_var($this->params['id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) === false)
             return $this->error_response('ID client not specified.');
