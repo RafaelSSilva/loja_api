@@ -45,7 +45,7 @@
     }
 
     if (!isset($_GET['edit']) AND $result['data']['status'] == 'ERROR') {
-        header('Locate: clientes.php');
+        header('Location: clientes.php');
     }
 ?>    
 

@@ -192,9 +192,6 @@ class api_logic {
             ':email'     => $this->params['email'],
             ':telefone'  => $this->params['telefone']
         ];
-
-        //$db->EXE_NON_QUERY("UPDATE clientes SET deleted_at = NOW() WHERE id_cliente = :id", $params);
-
         
         $db->EXE_NON_QUERY("
                 UPDATE clientes SET 
