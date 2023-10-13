@@ -148,7 +148,7 @@ class api_logic {
     }
 
 
-    public function edit_client() {
+    public function update_client() {
         if (!key_exists('id', $this->params) || filter_var($this->params['id'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) === false)
             return $this->error_response('ID client not specified.');
         
@@ -172,7 +172,7 @@ class api_logic {
 
         $db = new database;
 
-        $params = [ 'id_cliente' => $this->params['id'], 'email' => $this->params['email']];
+        $params = ['id_cliente' => $this->params['id'], 'email' => $this->params['email']];
         
         $results = $db->EXE_QUERY("
             SELECT * FROM clientes 
@@ -197,7 +197,8 @@ class api_logic {
                 UPDATE clientes SET 
                     nome = :nome, 
                     email = :email, 
-                    telefone = :telefone
+                    telefone = :telefone,
+                    updated_at = NOW()
                 WHERE id_cliente = :id_cliente    
                 ", $params);
         

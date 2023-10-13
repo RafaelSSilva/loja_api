@@ -9,44 +9,39 @@
 
     $error_message = $success_message = '';
     
-    if (!isset($_GET['id'])) {
-        header('Location: clientes.php');
-        exit;
-    }
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        if (!isset($_GET['id'])) {
+            header('Location: clientes.php');
+        }
 
-    $cliente['id'] = $_GET['id'];
-    $endpoint = 'get_client';
-    $method   = 'GET';
+        $cliente_id = $_GET['id']; 
 
-    if (isset($_GET['edit'])) {
-        $endpoint = 'edit_client';
-        $method   = 'POST';
-        $cliente['nome']     = isset($_POST['text_nome']) ? $_POST['text_nome'] : '';
-        $cliente['email']    = isset($_POST['text_email']) ? $_POST['text_email'] : '';
-        $cliente['telefone'] = isset($_POST['text_telefone']) ? $_POST['text_telefone'] : '';     
-    } 
-    
-    $result = api_request($endpoint, $method, $cliente);
+        $result = api_request('get_client', 'GET', ['id' => $cliente_id]);
+        if (count($result['data']['results']) <= 0) {
+            header('Location: clientes.php');
+        }
 
-
-    if (isset($_GET['edit']) AND $result['data']['status'] == 'SUCCESS') {
-        header('Location: clientes.php');
-        exit;
-    }
-   
-    if (isset($_GET['edit']) AND $result['data']['status'] == 'ERROR') {
-        $error_message = $result['data']['message'];
-    }
-
-    if (!isset($_GET['edit']) AND $result['data']['status'] == 'SUCCESS') {
         $cliente['nome']     = $result['data']['results'][0]['nome'];
         $cliente['email']    = $result['data']['results'][0]['email'];
         $cliente['telefone'] = $result['data']['results'][0]['telefone'];
     }
 
-    if (!isset($_GET['edit']) AND $result['data']['status'] == 'ERROR') {
-        header('Location: clientes.php');
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $cliente_id = $_POST['cliente_id']; 
+
+        $cliente['nome']     = isset($_POST['text_nome']) ? $_POST['text_nome'] : '';
+        $cliente['email']    = isset($_POST['text_email']) ? $_POST['text_email'] : '';
+        $cliente['telefone'] = isset($_POST['text_telefone']) ? $_POST['text_telefone'] : '';
+    
+        $result = api_request('update_client', 'POST', ['id' => $cliente_id, 'nome' => $cliente['nome'], 'email' => $cliente['email'], 'telefone' => $cliente['telefone']]);
+        if ($result['data']['status'] == 'SUCCESS') 
+            $success_message = $result['data']['message'];
+        elseif ($result['data']['status'] == 'ERROR') 
+            $error_message = $result['data']['message'];
+    
     }
+
+
 ?>    
 
 <!DOCTYPE html>
@@ -63,7 +58,9 @@
     <section class="container">
         <div class="row my-5">
             <div class="col-sm-6 card offset-sm-3 p-2">
-                <form action="cliente_edit.php?id=<?=$cliente['id'];?>&edit=true" method="POST">
+                <form action="cliente_edit.php" method="POST">
+                    <input type="hidden" name="cliente_id" value="<?=$cliente_id?>">
+                
                     <div class="mb-3">
                         <label>Nome do Cliente:</label>
                         <input id="text_nome" name="text_nome" type="text" class="form-control" value="<?=$cliente['nome']?>">
@@ -84,12 +81,15 @@
                         <input id="btn_add" name="btn_add" type="submit" value="Editar" class="btn btn-primary btn-sm">
                     </div>
                         
-        
-                    <?php if (!empty($error_message)): ?>
+                    <?php if (!empty($success_message)): ?>
+                        <div class="alert alert-success p-2 text-center">
+                            <?=$success_message;?>
+                        </div>
+                    <?php elseif (!empty($error_message)): ?>
                         <div class="alert alert-danger p-2 text-center">
                             <?=$error_message;?>
                         </div>
-                    <?php endif; ?>    
+                    <?php endif; ?>  
                 </form>
             </div>    
         </div>
