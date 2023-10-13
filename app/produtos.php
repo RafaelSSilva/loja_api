@@ -1,7 +1,7 @@
 <?php
     /**
-     * http://localhost/loja_api/app/
-     * http://localhost/loja_api/app/index.php
+     * http://localhost/loja_api/app/produtos.php
+     * http://127.0.0.1/loja_api/app/produtos.php
      */
         
     require_once 'inc/config.php';
@@ -60,7 +60,10 @@
                     <tr>
                         <td><?=$produto['nome']?></td>
                         <td><?=$produto['quantidade']?></td>
-                        <td class="text-end"><a href="produtos_delete.php?id=<?=$produto['id_produto']?>">Deletar</a></td>
+                        <td>
+                            <a href="produto_edit.php?id=<?=$produto['id_produto']?>">&#9998;</a>
+                            <a href="produtos_delete.php?id=<?=$produto['id_produto']?>">&#128465;</a>
+                        </td>
                     </tr>                                  
                     <?php endforeach;?>
                 </tbody>

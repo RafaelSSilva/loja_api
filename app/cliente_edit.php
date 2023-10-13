@@ -49,7 +49,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Consumidora - Novo Cliente</title>
+    <title>App Consumidora - Editar Cliente</title>
     <link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css">
 </head>
 <body>
