@@ -12,6 +12,7 @@
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (!isset($_GET['id'])) {
             header('Location: clientes.php');
+            exit;
         }
 
         $cliente_id = $_GET['id']; 
@@ -19,6 +20,7 @@
         $result = api_request('get_client', 'GET', ['id' => $cliente_id]);
         if (count($result['data']['results']) <= 0) {
             header('Location: clientes.php');
+            exit;
         }
 
         $cliente['nome']     = $result['data']['results'][0]['nome'];
@@ -40,8 +42,6 @@
             $error_message = $result['data']['message'];
     
     }
-
-
 ?>    
 
 <!DOCTYPE html>

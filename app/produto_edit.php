@@ -13,6 +13,7 @@
      if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (!isset($_GET['id'])) {
             header('Location: produtos.php');
+            exit;
         }
 
         $produto_id = $_GET['id']; 
@@ -20,6 +21,7 @@
         $result = api_request('get_product', 'GET', ['id' => $produto_id]);
         if (count($result['data']['results']) <= 0) {
             header('Location: produtos.php');
+            exit;
         }
 
         

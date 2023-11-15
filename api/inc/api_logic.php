@@ -15,7 +15,7 @@ class api_logic {
 
     /***** ENDPOINTS********************************************************************************************************************************************** */
 
-    public function status() {
+    public function status():array {
         return [
             'status'  => 'SUCCESS',
             'message' => 'API is running ok',
@@ -29,6 +29,23 @@ class api_logic {
             'status'   => 'ERROR',
             'message'  => $message,
             'results'  => []
+        ];
+    }
+
+    public function get_totals() {
+        //returns all clients from our database
+        $db = new database;
+
+        $results = $db->EXE_QUERY("
+            SELECT 'Clientes', COUNT(*) Total FROM clientes WHERE deleted_at IS NULL UNION ALL
+            SELECT 'Produtos', COUNT(*) Total FROM produtos WHERE deleted_at IS NULL
+
+        ");
+
+        return [
+            'status'   => 'SUCCESS',
+            'message'  => '',
+            'results'  => $results
         ];
     }
 
